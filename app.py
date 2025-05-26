@@ -157,7 +157,7 @@ def main():
                 'cspoint': admin.cspoint
             })
 
-    result['credit'] = '@ADITYASHARMA766208'
+    result['credit'] = 'Stark7771.'
     return jsonify(result)
 
 if __name__ == "__main__":
