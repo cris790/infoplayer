@@ -67,11 +67,11 @@ def main():
         return jsonify({"error": "Invalid UID"}), 400
 
     jwt_info = get_jwt_token(region)
-    if not jwt_info or 'token' not in jwt_info:
+    if not jwt_info or 'BearerAuth' not in jwt_info:
         return jsonify({"error": "Failed to fetch JWT token"}), 500
 
-    api = jwt_info['api']
-    token = jwt_info['token']
+    api = "https://game-api.axlegames.io"  # Assuming this is the API endpoint
+    token = jwt_info['BearerAuth']
 
     protobuf_data = create_protobuf(saturn_, 1)
     hex_data = protobuf_to_hex(protobuf_data)
