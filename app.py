@@ -51,7 +51,14 @@ def get_jwt_token(region):
     response = requests.get(jwt_url)
     if response.status_code != 200:
         return None
-    return response.json()
+    jwt_data = response.json()
+    # Extract the Bearer token from the new format
+    if jwt_data.get('success') and jwt_data.get('BearerAuth'):
+        return {
+            'token': jwt_data['BearerAuth'],
+            'api': jwt_data.get('api', 'https://api-gunzfree.vercel.app')  # Default API if not provided
+        }
+    return None
 
 @app.route('/player', methods=['GET'])
 def main():
@@ -67,11 +74,11 @@ def main():
         return jsonify({"error": "Invalid UID"}), 400
 
     jwt_info = get_jwt_token(region)
-    if not jwt_info or 'BearerAuth' not in jwt_info:
+    if not jwt_info or 'token' not in jwt_info:
         return jsonify({"error": "Failed to fetch JWT token"}), 500
 
-    api = "https://game-api.axlegames.io"  # Assuming this is the API endpoint
-    token = jwt_info['BearerAuth']
+    api = jwt_info.get('api', 'https://api-gunzfree.vercel.app')  # Use default if not provided
+    token = jwt_info['token']
 
     protobuf_data = create_protobuf(saturn_, 1)
     hex_data = protobuf_to_hex(protobuf_data)
