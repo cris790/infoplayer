@@ -3,7 +3,6 @@ from Crypto.Util.Padding import pad
 import binascii
 from flask import Flask, request, jsonify
 import requests
-import random
 import uid_generator_pb2
 from zitado_pb2 import Users
 from secret import key, iv
@@ -47,11 +46,18 @@ def get_credentials(region):
 
 def get_jwt_token(region):
     uid, password = get_credentials(region)
-    jwt_url = f"https://jwt-aditya.vercel.app/token?uid={uid}&password={password}"
+    jwt_url = f"https://gerarjwt.vercel.app/api/get_jwt?type=4&guest_uid={uid}&guest_password={password}"
     response = requests.get(jwt_url)
     if response.status_code != 200:
         return None
-    return response.json()
+
+    data = response.json()
+    if 'BearerAuth' not in data:
+        return None
+
+    return {
+        'token': data['BearerAuth']  # Apenas token, sem 'api'
+    }
 
 @app.route('/player', methods=['GET'])
 def main():
@@ -70,7 +76,6 @@ def main():
     if not jwt_info or 'token' not in jwt_info:
         return jsonify({"error": "Failed to fetch JWT token"}), 500
 
-    api = jwt_info['api']
     token = jwt_info['token']
 
     protobuf_data = create_protobuf(saturn_, 1)
@@ -89,7 +94,11 @@ def main():
     }
 
     try:
-        response = requests.post(f"{api}/GetPlayerPersonalShow", headers=headers, data=bytes.fromhex(encrypted_hex))
+        response = requests.post(
+            "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
+            headers=headers,
+            data=bytes.fromhex(encrypted_hex)
+        )
         response.raise_for_status()
     except requests.RequestException:
         return jsonify({"error": "Failed to contact game server"}), 502
@@ -148,7 +157,7 @@ def main():
                 'cspoint': admin.cspoint
             })
 
-    result['credit'] = 'Stark7771.'
+    result['credit'] = '@Stark7771,'
     return jsonify(result)
 
 if __name__ == "__main__":
