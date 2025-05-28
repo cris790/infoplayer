@@ -40,7 +40,7 @@ def get_credentials(region):
     if region == "IND":
         return "3938172055", "ADITYA_FREE_INFO_IND"
     elif region in ["NA", "BR", "SAC", "US"]:
-        return "3938172433", "ADITYA_FREE_INFO_NA"
+        return "3608419926", "271994153860DB1E19C6D470D7788F93DA78685F63512BEFB45455F7773FE73B"
     else:
         return "3938172267", "ADITYA_FREE_INFO_SG"
 
