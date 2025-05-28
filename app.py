@@ -38,9 +38,9 @@ def encrypt_aes(hex_data, key, iv):
 def get_credentials(region):
     region = region.upper()
     if region == "IND":
-        return "3938172055", "ADITYA_FREE_INFO_IND"
+        return "3608323601", "1D1017760CAE841DA60CF90FB5A4A0868FC6940F6668483882D951729D74E398"
     elif region in ["NA", "BR", "SAC", "US"]:
-        return "3608419926", "271994153860DB1E19C6D470D7788F93DA78685F63512BEFB45455F7773FE73B"
+        return "3608323601", "1D1017760CAE841DA60CF90FB5A4A0868FC6940F6668483882D951729D74E398"
     else:
         return "3938172267", "ADITYA_FREE_INFO_SG"
 
